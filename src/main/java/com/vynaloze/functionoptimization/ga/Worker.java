@@ -12,6 +12,7 @@ public class Worker {
     private final BiFunction<Double, Double, Double> rosenbrock = (x, y) -> Math.pow(1.0 - x, 2) + 100.0 * Math.pow((y - Math.pow(x, 2)), 2);
 
     public void run() {
+        System.out.println("Creating new population with size " + Params.POP_SIZE);
         for (int i = 0; i < Params.POP_SIZE; i++) {
             population.add(new Individual());
         }
@@ -19,21 +20,26 @@ public class Worker {
         for (int i = 0; i < Params.ITERATIONS; i++) {
             final List<Individual> newPopulation = new ArrayList<>();
 
-//            System.out.println("Computing fitness");
+            System.out.println("Iteration " + i + "/" + Params.ITERATIONS);
+            System.out.println("a) Evaluating fitness.");
             for (final Individual individual : population) {
                 individual.evaluateFitness(rosenbrock);
             }
-            final double totalFitness = population.stream().mapToDouble(Individual::getFitnessValue).sum();
-            final double bestFitness = population.stream().mapToDouble(Individual::getFitnessValue).max().getAsDouble();
-//            System.out.println("Total fitness: " + totalFitness);
-//            System.out.println("Best fitness: " + bestFitness);
 
-//            System.out.println("Calculating probabilities");
-            for (final Individual individual : population) {
-                individual.setProbability(individual.getFitnessValue() / totalFitness);
+            population.sort(Comparator.comparingDouble(Individual::getFitnessValue).reversed());
+            System.out.println("Best individuals:");
+            for (int j = 0; j < 5; j++) {
+                final Individual individual = population.get(j);
+                System.out.println(j + ". " + individual);
+            }
+            System.out.println("Worst individuals:");
+            for (int j = 0; j < 5; j++) {
+                final Individual individual = population.get(population.size() - 1 - j);
+                System.out.println(j + ". " + individual);
             }
 
-//            System.out.println("Reproducing... Hehe.");
+            System.out.println("b) Selection with crossover.");
+            calculateProbabilities();
             while (newPopulation.size() < Params.POP_SIZE) {
                 final Individual parent1 = pick();
                 final Individual parent2 = pick();
@@ -46,7 +52,7 @@ public class Worker {
                 }
             }
 
-//            System.out.println("Mutating");
+            System.out.println("c) Mutation");
             for (final Individual individual : newPopulation) {
                 if (random.nextDouble() < Params.MUTATION_RATE) {
                     individual.mutate();
@@ -54,23 +60,29 @@ public class Worker {
             }
 
             population = newPopulation;
-
-            Individual best = population.stream().max(Comparator.comparingDouble(Individual::getProbability)).get();
-            System.out.println(best);
         }
-        System.out.println("Finished");
+        System.out.println("Finished.");
+        System.out.print("Best Individual: ");
+        final Individual best = population.stream().max(Comparator.comparingDouble(Individual::getProbability)).get();
+        System.out.println(best);
     }
 
-    private Individual pick(){
+    private void calculateProbabilities() {
+        final double totalFitness = population.stream().mapToDouble(Individual::getFitnessValue).sum();
+        for (final Individual individual : population) {
+            individual.setProbability(individual.getFitnessValue() / totalFitness);
+        }
+    }
+
+    private Individual pick() {
         final double probability = random.nextDouble();
         double cumulativeProbability = 0.0;
-        for(final Individual individual : population){
+        for (final Individual individual : population) {
             cumulativeProbability += individual.getProbability();
-            if(cumulativeProbability >= probability){
+            if (cumulativeProbability >= probability) {
                 return individual;
             }
         }
         return null;
     }
-
 }

@@ -5,8 +5,10 @@ import java.util.function.BiFunction;
 
 public class Individual {
     private final Chromosome chromosome;
+    private double functionValue;
     private double fitnessValue;
     private double probability;
+    private static final Random random = new Random();
 
     public Individual() {
         this.chromosome = new Chromosome();
@@ -18,6 +20,10 @@ public class Individual {
 
     public Chromosome getChromosome() {
         return chromosome;
+    }
+
+    public double getFunctionValue() {
+        return functionValue;
     }
 
     public double getFitnessValue() {
@@ -33,27 +39,24 @@ public class Individual {
     }
 
     public void evaluateFitness(final BiFunction<Double, Double, Double> function) {
-        fitnessValue = 1.0 / function.apply(getChromosome().getGeneX(), getChromosome().getGeneY());
+        functionValue = function.apply(getChromosome().getGeneX(), getChromosome().getGeneY());
+        fitnessValue = 1.0 / functionValue;
     }
 
     public void mutate() {
         chromosome.mutate();
     }
 
-    public static Individual crossover(final Individual i1, final Individual i2){
-        final Random random = new Random();
+    public static Individual crossover(final Individual i1, final Individual i2) {
         final double x = random.nextBoolean() ? i1.getChromosome().getGeneX() : i2.getChromosome().getGeneX();
         final double y = random.nextBoolean() ? i1.getChromosome().getGeneY() : i2.getChromosome().getGeneY();
-        final Chromosome chromosome = new Chromosome(x,y);
-        return new Individual(chromosome);
+        return new Individual(new Chromosome(x, y));
     }
 
     @Override
     public String toString() {
-        return "Individual{" +
-                "chromosome=" + chromosome +
-                ", fitnessValue=" + fitnessValue +
-                ", probability=" + probability +
-                '}';
+        return "x=" + chromosome.getGeneX()
+                + " y=" + chromosome.getGeneY()
+                + "; f(x,y)=" + functionValue;
     }
 }
