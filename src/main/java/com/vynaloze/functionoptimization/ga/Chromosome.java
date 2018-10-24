@@ -26,11 +26,19 @@ public class Chromosome {
 
     public void mutate() {
         final Random random = new Random();
-        final double mutationValue = random.nextDouble() * GARandom.get();
+        final double mutationValue = random.nextDouble() * (random.nextBoolean() ? 1 : -1);
         if (random.nextBoolean()) {
-            geneX += mutationValue;
+            geneX += mutationValue * geneX;
         } else {
-            geneY += mutationValue;
+            geneY += mutationValue * geneY;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Chromosome{" +
+                "geneX=" + geneX +
+                ", geneY=" + geneY +
+                '}';
     }
 }

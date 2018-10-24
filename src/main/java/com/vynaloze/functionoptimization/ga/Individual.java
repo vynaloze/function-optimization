@@ -4,8 +4,9 @@ import java.util.Random;
 import java.util.function.BiFunction;
 
 public class Individual {
-    private Chromosome chromosome;
+    private final Chromosome chromosome;
     private double fitnessValue;
+    private double probability;
 
     public Individual() {
         this.chromosome = new Chromosome();
@@ -23,8 +24,16 @@ public class Individual {
         return fitnessValue;
     }
 
+    public double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(final double probability) {
+        this.probability = probability;
+    }
+
     public void evaluateFitness(final BiFunction<Double, Double, Double> function) {
-        fitnessValue = 1 / function.apply(getChromosome().getGeneX(), getChromosome().getGeneY());
+        fitnessValue = 1.0 / function.apply(getChromosome().getGeneX(), getChromosome().getGeneY());
     }
 
     public void mutate() {
@@ -37,5 +46,14 @@ public class Individual {
         final double y = random.nextBoolean() ? i1.getChromosome().getGeneY() : i2.getChromosome().getGeneY();
         final Chromosome chromosome = new Chromosome(x,y);
         return new Individual(chromosome);
+    }
+
+    @Override
+    public String toString() {
+        return "Individual{" +
+                "chromosome=" + chromosome +
+                ", fitnessValue=" + fitnessValue +
+                ", probability=" + probability +
+                '}';
     }
 }
