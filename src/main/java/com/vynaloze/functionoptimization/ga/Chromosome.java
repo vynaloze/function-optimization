@@ -1,5 +1,6 @@
 package com.vynaloze.functionoptimization.ga;
 
+import com.vynaloze.functionoptimization.functions.Domain;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -8,9 +9,9 @@ public class Chromosome {
     private double geneY;
     private static final Random random = new Random();
 
-    public Chromosome() {
-        this.geneX = ThreadLocalRandom.current().nextDouble(Params.DOMAIN_MIN, Params.DOMAIN_MAX);
-        this.geneY = ThreadLocalRandom.current().nextDouble(Params.DOMAIN_MIN, Params.DOMAIN_MAX);
+    public Chromosome(final Domain domain) {
+        this.geneX = ThreadLocalRandom.current().nextDouble(domain.getMinX(), domain.getMaxX());
+        this.geneY = ThreadLocalRandom.current().nextDouble(domain.getMinY(), domain.getMaxY());
     }
 
     public Chromosome(final double geneX, final double geneY) {

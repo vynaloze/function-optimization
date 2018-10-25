@@ -1,20 +1,21 @@
 package com.vynaloze.functionoptimization.ga;
 
+import com.vynaloze.functionoptimization.functions.RosenbrockFunction;
+import com.vynaloze.functionoptimization.functions.TestFunction;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.function.BiFunction;
 
 public class Worker {
     private final Random random = new Random();
     private List<Individual> population = new ArrayList<>();
-    private final BiFunction<Double, Double, Double> rosenbrock = (x, y) -> Math.pow(1.0 - x, 2) + 100.0 * Math.pow((y - Math.pow(x, 2)), 2);
+    private final TestFunction testFunction = new RosenbrockFunction();
 
     public void run() {
         System.out.println("Creating new population with size " + Params.POP_SIZE);
         for (int i = 0; i < Params.POP_SIZE; i++) {
-            population.add(new Individual());
+            population.add(new Individual(testFunction.getDomain()));
         }
 
         for (int i = 0; i < Params.ITERATIONS; i++) {
@@ -23,7 +24,7 @@ public class Worker {
             System.out.println("Iteration " + i + "/" + Params.ITERATIONS);
             System.out.println("a) Evaluating fitness.");
             for (final Individual individual : population) {
-                individual.evaluateFitness(rosenbrock);
+                individual.evaluateFitness(testFunction);
             }
 
             population.sort(Comparator.comparingDouble(Individual::getFitnessValue).reversed());

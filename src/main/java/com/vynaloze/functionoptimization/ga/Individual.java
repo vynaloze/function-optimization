@@ -1,5 +1,6 @@
 package com.vynaloze.functionoptimization.ga;
 
+import com.vynaloze.functionoptimization.functions.Domain;
 import java.util.Random;
 import java.util.function.BiFunction;
 
@@ -10,8 +11,8 @@ public class Individual {
     private double probability;
     private static final Random random = new Random();
 
-    public Individual() {
-        this.chromosome = new Chromosome();
+    public Individual(final Domain domain) {
+        this.chromosome = new Chromosome(domain);
     }
 
     public Individual(final Chromosome chromosome) {
