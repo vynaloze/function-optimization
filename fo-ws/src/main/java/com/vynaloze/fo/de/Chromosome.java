@@ -1,13 +1,11 @@
-package com.vynaloze.functionoptimization.ga;
+package com.vynaloze.fo.de;
 
-import com.vynaloze.functionoptimization.functions.Domain;
-import java.util.Random;
+import com.vynaloze.fo.functions.Domain;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Chromosome {
-    private double geneX;
-    private double geneY;
-    private static final Random random = new Random();
+    private final double geneX;
+    private final double geneY;
 
     public Chromosome(final Domain domain) {
         this.geneX = ThreadLocalRandom.current().nextDouble(domain.getMinX(), domain.getMaxX());
@@ -25,14 +23,5 @@ public class Chromosome {
 
     public double getGeneY() {
         return geneY;
-    }
-
-    public void mutate() {
-        final double mutationValue = random.nextDouble() * (random.nextBoolean() ? 1 : -1);
-        if (random.nextBoolean()) {
-            geneX += mutationValue * geneX;
-        } else {
-            geneY += mutationValue * geneY;
-        }
     }
 }

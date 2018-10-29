@@ -1,4 +1,4 @@
-package com.vynaloze.functionoptimization.functions;
+package com.vynaloze.fo.functions;
 
 import java.util.function.BiFunction;
 

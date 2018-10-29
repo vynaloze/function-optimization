@@ -1,19 +1,19 @@
-package com.vynaloze.functionoptimization.de;
+package com.vynaloze.fo.de;
 
-import com.vynaloze.functionoptimization.functions.RosenbrockFunction;
-import com.vynaloze.functionoptimization.functions.TestFunction;
+import com.vynaloze.fo.Worker;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class Worker {
+public class WorkerDE extends Worker {
     private List<Individual> population = new ArrayList<>();
-    private final TestFunction testFunction = new RosenbrockFunction();
 
-    public void run() {
-        System.out.println("Creating new population with size " + Params.POP_SIZE);
+    @Override
+    public void run(final PrintWriter out) {
+        out.println("Creating new population with size " + Params.POP_SIZE);
         for (int i = 0; i < Params.POP_SIZE; i++) {
             population.add(new Individual(testFunction.getDomain()));
         }
@@ -21,25 +21,25 @@ public class Worker {
         for (int iteration = 0; iteration < Params.ITERATIONS; iteration++) {
             final List<Individual> newPopulation = new ArrayList<>();
 
-            System.out.println("Iteration " + iteration + "/" + Params.ITERATIONS);
+            out.println("Iteration " + iteration + "/" + Params.ITERATIONS);
 
 
             for (int target = 0; target < population.size(); target++) {
-//                System.out.println("a) Take 3 distinct parents.");
+//                out.println("a) Take 3 distinct parents.");
                 final List<Individual> candidates = getThreeDistinctParents(target);
-//                System.out.println("b) Mutate.");
+//                out.println("b) Mutate.");
                 final Individual mutated = Individual.mutate(candidates);
-//                System.out.println("c) Crossover.");
+//                out.println("c) Crossover.");
                 final Individual targetCandidate = population.get(target);
                 final Individual offspring = Individual.crossover(targetCandidate, mutated);
-//                System.out.println("d) Selection");
+//                out.println("d) Selection");
                 targetCandidate.evaluateFitness(testFunction);
                 offspring.evaluateFitness(testFunction);
-//                System.out.println("Target: " + targetCandidate);
-//                System.out.println("Offspring: " + offspring);
+//                out.println("Target: " + targetCandidate);
+//                out.println("Offspring: " + offspring);
 
                 if (targetCandidate.getFitnessValue() < offspring.getFitnessValue()) {
-//                    System.out.println("e) Replacing.");
+//                    out.println("e) Replacing.");
                     newPopulation.add(offspring);
                 } else {
                     newPopulation.add(targetCandidate);
@@ -48,10 +48,10 @@ public class Worker {
             population = newPopulation;
 
         }
-        System.out.println("Finished.");
-        System.out.print("Best Individual: ");
+        out.println("Finished.");
+        out.print("Best Individual: ");
         final Individual best = population.stream().max(Comparator.comparingDouble(Individual::getFitnessValue)).get();
-        System.out.println(best);
+        out.println(best);
     }
 
     private List<Individual> getThreeDistinctParents(final int current) {

@@ -1,19 +1,19 @@
-package com.vynaloze.functionoptimization.ga;
+package com.vynaloze.fo.ga;
 
-import com.vynaloze.functionoptimization.functions.RosenbrockFunction;
-import com.vynaloze.functionoptimization.functions.TestFunction;
+import com.vynaloze.fo.Worker;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-public class Worker {
+public class WorkerGA extends Worker {
     private final Random random = new Random();
     private List<Individual> population = new ArrayList<>();
-    private final TestFunction testFunction = new RosenbrockFunction();
 
-    public void run() {
-        System.out.println("Creating new population with size " + Params.POP_SIZE);
+    @Override
+    public void run(final PrintWriter out) {
+        out.println("Creating new population with size " + Params.POP_SIZE);
         for (int i = 0; i < Params.POP_SIZE; i++) {
             population.add(new Individual(testFunction.getDomain()));
         }
@@ -21,25 +21,25 @@ public class Worker {
         for (int i = 0; i < Params.ITERATIONS; i++) {
             final List<Individual> newPopulation = new ArrayList<>();
 
-            System.out.println("Iteration " + i + "/" + Params.ITERATIONS);
-            System.out.println("a) Evaluating fitness.");
+            out.println("Iteration " + i + "/" + Params.ITERATIONS);
+            out.println("a) Evaluating fitness.");
             for (final Individual individual : population) {
                 individual.evaluateFitness(testFunction);
             }
 
             population.sort(Comparator.comparingDouble(Individual::getFitnessValue).reversed());
-            System.out.println("Best individuals:");
+            out.println("Best individuals:");
             for (int j = 0; j < 5; j++) {
                 final Individual individual = population.get(j);
-                System.out.println(j + ". " + individual);
+                out.println(j + ". " + individual);
             }
-            System.out.println("Worst individuals:");
+            out.println("Worst individuals:");
             for (int j = 0; j < 5; j++) {
                 final Individual individual = population.get(population.size() - 1 - j);
-                System.out.println(j + ". " + individual);
+                out.println(j + ". " + individual);
             }
 
-            System.out.println("b) Selection with crossover.");
+            out.println("b) Selection with crossover.");
             calculateProbabilities();
             while (newPopulation.size() < Params.POP_SIZE) {
                 final Individual parent1 = pick();
@@ -53,7 +53,7 @@ public class Worker {
                 }
             }
 
-            System.out.println("c) Mutation");
+            out.println("c) Mutation");
             for (final Individual individual : newPopulation) {
                 if (random.nextDouble() < Params.MUTATION_RATE) {
                     individual.mutate();
@@ -62,10 +62,10 @@ public class Worker {
 
             population = newPopulation;
         }
-        System.out.println("Finished.");
-        System.out.print("Best Individual: ");
+        out.println("Finished.");
+        out.print("Best Individual: ");
         final Individual best = population.stream().max(Comparator.comparingDouble(Individual::getProbability)).get();
-        System.out.println(best);
+        out.println(best);
     }
 
     private void calculateProbabilities() {

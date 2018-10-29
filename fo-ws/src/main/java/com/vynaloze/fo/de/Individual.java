@@ -1,6 +1,6 @@
-package com.vynaloze.functionoptimization.de;
+package com.vynaloze.fo.de;
 
-import com.vynaloze.functionoptimization.functions.Domain;
+import com.vynaloze.fo.functions.Domain;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;

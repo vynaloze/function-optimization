@@ -1,4 +1,4 @@
-package com.vynaloze.functionoptimization.functions;
+package com.vynaloze.fo.functions;
 
 public class BealeFunction extends TestFunction {
     public BealeFunction() {

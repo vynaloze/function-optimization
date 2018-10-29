@@ -1,4 +1,4 @@
-package com.vynaloze.functionoptimization.de;
+package com.vynaloze.fo.de;
 
 public class Params {
     public static final int POP_SIZE = 1000;
