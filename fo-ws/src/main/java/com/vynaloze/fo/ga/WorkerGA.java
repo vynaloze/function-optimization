@@ -1,6 +1,9 @@
 package com.vynaloze.fo.ga;
 
+import com.vynaloze.fo.Coord;
+import com.vynaloze.fo.Results;
 import com.vynaloze.fo.Worker;
+import com.vynaloze.fo.dao.Dao;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,8 +14,14 @@ public class WorkerGA extends Worker {
     private final Random random = new Random();
     private List<Individual> population = new ArrayList<>();
 
+    public WorkerGA(final Dao dao) {
+        super(dao);
+    }
+
     @Override
     public void run(final PrintWriter out) {
+        final Results results = new Results(testFunction.getClass(), "GA");
+
         out.println("Creating new population with size " + Params.POP_SIZE);
         for (int i = 0; i < Params.POP_SIZE; i++) {
             population.add(new Individual(testFunction.getDomain()));
@@ -22,24 +31,24 @@ public class WorkerGA extends Worker {
             final List<Individual> newPopulation = new ArrayList<>();
 
             out.println("Iteration " + i + "/" + Params.ITERATIONS);
-            out.println("a) Evaluating fitness.");
+//            out.println("a) Evaluating fitness.");
             for (final Individual individual : population) {
                 individual.evaluateFitness(testFunction);
             }
 
-            population.sort(Comparator.comparingDouble(Individual::getFitnessValue).reversed());
-            out.println("Best individuals:");
-            for (int j = 0; j < 5; j++) {
-                final Individual individual = population.get(j);
-                out.println(j + ". " + individual);
-            }
-            out.println("Worst individuals:");
-            for (int j = 0; j < 5; j++) {
-                final Individual individual = population.get(population.size() - 1 - j);
-                out.println(j + ". " + individual);
-            }
+//            population.sort(Comparator.comparingDouble(Individual::getFitnessValue).reversed());
+//            out.println("Best individuals:");
+//            for (int j = 0; j < 5; j++) {
+//                final Individual individual = population.get(j);
+//                out.println(j + ". " + individual);
+//            }
+//            out.println("Worst individuals:");
+//            for (int j = 0; j < 5; j++) {
+//                final Individual individual = population.get(population.size() - 1 - j);
+//                out.println(j + ". " + individual);
+//            }
 
-            out.println("b) Selection with crossover.");
+//            out.println("b) Selection with crossover.");
             calculateProbabilities();
             while (newPopulation.size() < Params.POP_SIZE) {
                 final Individual parent1 = pick();
@@ -53,7 +62,7 @@ public class WorkerGA extends Worker {
                 }
             }
 
-            out.println("c) Mutation");
+//            out.println("c) Mutation");
             for (final Individual individual : newPopulation) {
                 if (random.nextDouble() < Params.MUTATION_RATE) {
                     individual.mutate();
@@ -61,11 +70,15 @@ public class WorkerGA extends Worker {
             }
 
             population = newPopulation;
+
+            out.print("Best Individual: ");
+            final Individual best = population.stream().max(Comparator.comparingDouble(Individual::getProbability)).get();
+            out.println(best);
+            final Coord coord = new Coord(best.getChromosome().getGeneX(), best.getChromosome().getGeneY(), best.getFunctionValue());
+            results.add(coord);
         }
         out.println("Finished.");
-        out.print("Best Individual: ");
-        final Individual best = population.stream().max(Comparator.comparingDouble(Individual::getProbability)).get();
-        out.println(best);
+        dao.putResults(results);
     }
 
     private void calculateProbabilities() {

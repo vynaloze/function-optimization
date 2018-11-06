@@ -12,6 +12,7 @@
     <modules>
         <module>fo-ws</module>
         <module>fo-client</module>
+        <module>fo-common</module>
     </modules>
 
 </project>

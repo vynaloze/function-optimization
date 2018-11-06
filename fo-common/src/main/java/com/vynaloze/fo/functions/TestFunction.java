@@ -1,8 +1,9 @@
 package com.vynaloze.fo.functions;
 
+import java.io.Serializable;
 import java.util.function.BiFunction;
 
-public abstract class TestFunction implements BiFunction<Double, Double, Double> {
+public abstract class TestFunction implements BiFunction<Double, Double, Double>, Serializable {
     private final Domain domain;
 
     public TestFunction(final Domain domain) {

@@ -1,6 +1,8 @@
 package com.vynaloze.fo.functions;
 
-public class Domain {
+import java.io.Serializable;
+
+public class Domain implements Serializable {
     private final double minX;
     private final double maxX;
     private final double minY;

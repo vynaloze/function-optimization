@@ -2,7 +2,7 @@ package com.vynaloze.fo.functions;
 
 public class RosenbrockFunction extends TestFunction {
     public RosenbrockFunction() {
-        super(new Domain(-1000, 1000, -1000, 1000));
+        super(new Domain(-100, 100, -100, 100));
     }
 
     @Override

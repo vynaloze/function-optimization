@@ -10,8 +10,8 @@ public class Chromosome {
     private static final Random random = new Random();
 
     public Chromosome(final Domain domain) {
-        this.geneX = ThreadLocalRandom.current().nextDouble(domain.getMinX(), domain.getMaxX());
-        this.geneY = ThreadLocalRandom.current().nextDouble(domain.getMinY(), domain.getMaxY());
+        this.geneX = ThreadLocalRandom.current().nextDouble(domain.getMinX(), domain.getMaxX());  //bukinN6:
+        this.geneY = ThreadLocalRandom.current().nextDouble(domain.getMinY(), domain.getMaxY()); //fixme Best Individual: x=-0.4089798587405582 y=0.9195756692939667; f(x,y)=1.3208502897482972
     }
 
     public Chromosome(final double geneX, final double geneY) {
