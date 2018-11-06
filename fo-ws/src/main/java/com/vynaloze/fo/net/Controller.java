@@ -10,6 +10,7 @@ import com.vynaloze.fo.functions.BukinN6Function;
 import com.vynaloze.fo.functions.RosenbrockFunction;
 import com.vynaloze.fo.functions.TestFunction;
 import com.vynaloze.fo.ga.WorkerGA;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
@@ -29,8 +30,8 @@ public class Controller {
                 return new Response(Response.Status.DROP, null, null);
             }
 
-            if (splitted.length != 2) {
-                out.writeObject("Invalid request size. Possible options: [ GA/DE ];[ ROS/BEA/BUK ]");
+            if (splitted.length < 2 || splitted.length > 3) {
+                out.writeObject("Invalid request size. Possible options: [ GA/DE ];[ ROS/BEA/BUK ](;VIS)");
 
                 return new Response(Response.Status.INVALID, null, null);
             }
@@ -68,8 +69,11 @@ public class Controller {
             worker.setTestFunction(testFunction);
             worker.run(out);
 
+
+            final boolean visualise = splitted.length == 3;
+
             final Results results = dao.getResults(testFunction.getClass(), splitted[0]).get();
-            return new Response(Response.Status.OK, results, testFunction);
+            return new Response(Response.Status.OK, results, testFunction, visualise);
 
         } catch (final IOException e) {
             e.printStackTrace();

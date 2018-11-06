@@ -1,6 +1,7 @@
 package com.vynaloze.fo;
 
 import com.vynaloze.fo.net.Controller;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,7 +29,6 @@ public class Server {
                 final Response response = controller.process(inputLine, out);
                 if (response.getStatus().equals(Response.Status.OK)) {
                     out.writeObject(response);
-
                 }
                 if (response.getStatus().equals(Response.Status.DROP)) {
                     out.writeObject(Response.Status.DROP.getStatus() + "\n");

@@ -20,7 +20,9 @@ public class SocketReader implements Runnable {
             while ((input = in.readObject()) != null) {
                 if (input instanceof Response) {
                     final Response response = (Response) input;
-                    Plotter.plot(response.getResults(), response.getTestFunction());
+                    if (response.visualize()) {
+                        Plotter.plot(response.getResults(), response.getTestFunction());
+                    }
                 } else if (input instanceof String) {
                     final String line = (String) input;
                     out.println(">>>" + line);
