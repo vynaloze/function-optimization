@@ -1,6 +1,7 @@
 package com.vynaloze.fo.ga;
 
 import com.vynaloze.fo.functions.Domain;
+
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -28,11 +29,19 @@ public class Chromosome {
     }
 
     public void mutate() {
-        final double mutationValue = random.nextDouble() * (random.nextBoolean() ? 1 : -1);
         if (random.nextBoolean()) {
-            geneX += mutationValue * geneX;
+            geneX = randomize(geneX);
         } else {
-            geneY += mutationValue * geneY;
+            geneY = randomize(geneY);
+        }
+    }
+
+    private double randomize(final double value) {
+        final double mutationValue = random.nextDouble() * (random.nextBoolean() ? 1 : -1);
+        if (value <= 0) {
+            return value + mutationValue;
+        } else {
+            return value * mutationValue;
         }
     }
 }

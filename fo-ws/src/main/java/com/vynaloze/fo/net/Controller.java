@@ -12,7 +12,6 @@ import com.vynaloze.fo.functions.TestFunction;
 import com.vynaloze.fo.ga.WorkerGA;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 
 //fixme all of this to look up
 public class Controller {
@@ -31,7 +30,7 @@ public class Controller {
             }
 
             if (splitted.length != 2) {
-                out.writeObject("Invalid request size.\n");
+                out.writeObject("Invalid request size. Possible options: [ GA/DE ];[ ROS/BEA/BUK ]");
 
                 return new Response(Response.Status.INVALID, null, null);
             }
@@ -45,7 +44,7 @@ public class Controller {
                     worker = new WorkerDE(dao);
                     break;
                 default:
-                    out.writeObject("Invalid algorithm. Possible options: GA, DE.\n");
+                    out.writeObject("Invalid algorithm. Possible options: GA, DE.");
 
                     return new Response(Response.Status.INVALID, null, null);
             }
@@ -61,13 +60,13 @@ public class Controller {
                     testFunction = new BukinN6Function();
                     break;
                 default:
-                    out.writeObject("Invalid function. Possible options: ROS,BEA,BUK.\n");
+                    out.writeObject("Invalid function. Possible options: ROS,BEA,BUK.");
 
                     return new Response(Response.Status.INVALID, null, null);
             }
 
             worker.setTestFunction(testFunction);
-            worker.run(new PrintWriter(System.out)); //fixme
+            worker.run(out);
 
             final Results results = dao.getResults(testFunction.getClass(), splitted[0]).get();
             return new Response(Response.Status.OK, results, testFunction);
