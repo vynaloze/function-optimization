@@ -72,7 +72,12 @@ public class Controller {
 
             final boolean visualise = splitted.length == 3;
 
-            final Results results = dao.getResults(testFunction.getClass(), splitted[0]).get();
+            final Results results; //fixme this is kinda stupid
+            if (visualise) {
+                results = dao.getResults(testFunction.getClass(), splitted[0]).get();
+            } else {
+                results = null;
+            }
             return new Response(Response.Status.OK, results, testFunction, visualise);
 
         } catch (final IOException e) {

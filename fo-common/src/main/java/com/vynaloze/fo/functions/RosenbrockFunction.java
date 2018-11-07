@@ -1,13 +1,15 @@
 package com.vynaloze.fo.functions;
 
+import java.util.List;
+
 public class RosenbrockFunction extends TestFunction {
     public RosenbrockFunction() {
-        super(new Domain(-100, 100, -100, 100));
+        super(new Domain(new Domain.Range(-100, 100), new Domain.Range(-100, 100)));
     }
 
     @Override
-    public Double apply(final Double x, final Double y) {
-        return Math.pow(1.0 - x, 2) + 100.0 * Math.pow((y - Math.pow(x, 2)), 2);
+    public double apply(final List<Double> args) {
+        return Math.pow(1.0 - args.get(0), 2) + 100.0 * Math.pow((args.get(1) - Math.pow(args.get(0), 2)), 2);
     }
 
     // expected min: f(1,1) = 0

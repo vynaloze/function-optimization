@@ -16,6 +16,8 @@ import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
 import org.jzy3d.plot3d.primitives.Scatter;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
+
+import java.util.Arrays;
 import java.util.List;
 
 public class Plotter {
@@ -34,15 +36,15 @@ public class Plotter {
         finalPoint.setWidth(8);
 
         final Domain domain = testFunction.getDomain();
-        final Range xrange = new Range((float) domain.getMinX(), (float) domain.getMaxX());
-        final Range yrange = new Range((float) domain.getMinY(), (float) domain.getMaxY());
+        final Range xrange = new Range((float) domain.getRanges().get(0).getMin(), (float) domain.getRanges().get(0).getMax());
+        final Range yrange = new Range((float) domain.getRanges().get(1).getMin(), (float) domain.getRanges().get(1).getMax());
         final int steps = 100;
 
         // Create a surface drawing that function
         final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(xrange, steps, yrange, steps), new Mapper() {
             @Override
             public double f(final double v, final double v1) {
-                return testFunction.apply(v, v1);
+                return testFunction.apply(Arrays.asList(v, v1));
             }
         });
         surface.setColorMapper(new ColorMapper(new ColorMapRainbow(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new Color(1, 1, 1, .5f)));

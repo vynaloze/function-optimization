@@ -1,33 +1,35 @@
 package com.vynaloze.fo.functions;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 public class Domain implements Serializable {
-    private final double minX;
-    private final double maxX;
-    private final double minY;
-    private final double maxY;
+    private final List<Range> ranges;
 
-    public Domain(final double minX, final double maxX, final double minY, final double maxY) {
-        this.minX = minX;
-        this.maxX = maxX;
-        this.minY = minY;
-        this.maxY = maxY;
+    public Domain(final Range... ranges) {
+        this.ranges = Arrays.asList(ranges);
     }
 
-    public double getMinX() {
-        return minX;
+    public List<Range> getRanges() {
+        return ranges;
     }
 
-    public double getMaxX() {
-        return maxX;
-    }
+    public static class Range implements Serializable {
+        private final double min;
+        private final double max;
 
-    public double getMinY() {
-        return minY;
-    }
+        public Range(final double min, final double max) {
+            this.min = min;
+            this.max = max;
+        }
 
-    public double getMaxY() {
-        return maxY;
+        public double getMin() {
+            return min;
+        }
+
+        public double getMax() {
+            return max;
+        }
     }
 }

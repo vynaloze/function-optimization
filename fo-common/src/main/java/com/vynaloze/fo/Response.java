@@ -5,6 +5,7 @@ import com.vynaloze.fo.functions.TestFunction;
 import java.io.Serializable;
 
 public class Response implements Serializable {
+    //fixme rethink this class
     private final Status status;
     private final Results results;
     private final TestFunction testFunction;

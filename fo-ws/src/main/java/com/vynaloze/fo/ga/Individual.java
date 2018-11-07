@@ -1,8 +1,11 @@
 package com.vynaloze.fo.ga;
 
 import com.vynaloze.fo.functions.Domain;
+import com.vynaloze.fo.functions.TestFunction;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.function.BiFunction;
 
 public class Individual {
     private final Chromosome chromosome;
@@ -39,8 +42,8 @@ public class Individual {
         this.probability = probability;
     }
 
-    public void evaluateFitness(final BiFunction<Double, Double, Double> function) {
-        functionValue = function.apply(getChromosome().getGeneX(), getChromosome().getGeneY());
+    public void evaluateFitness(final TestFunction function) {
+        functionValue = function.apply(getChromosome().getGenes());
         fitnessValue = 1.0 / functionValue;
     }
 
@@ -49,15 +52,20 @@ public class Individual {
     }
 
     public static Individual crossover(final Individual i1, final Individual i2) {
-        final double x = random.nextBoolean() ? i1.getChromosome().getGeneX() : i2.getChromosome().getGeneX();
-        final double y = random.nextBoolean() ? i1.getChromosome().getGeneY() : i2.getChromosome().getGeneY();
-        return new Individual(new Chromosome(x, y));
+        final List<Double> genes = new ArrayList<>();
+        for (int i = 0; i < i1.chromosome.getGenes().size(); i++) {
+            genes.add(random.nextBoolean() ? i1.getChromosome().getGene(i) : i2.getChromosome().getGene(i));
+        }
+        return new Individual(new Chromosome(genes));
     }
 
     @Override
     public String toString() {
-        return "x=" + chromosome.getGeneX()
-                + " y=" + chromosome.getGeneY()
-                + "; f(x,y)=" + functionValue;
+        final StringBuilder sb = new StringBuilder();
+        for (final Double gene : chromosome.getGenes()) {
+            sb.append(gene.toString()).append(", ");
+        }
+        sb.append("f(x,y)=").append(functionValue);
+        return sb.toString();
     }
 }

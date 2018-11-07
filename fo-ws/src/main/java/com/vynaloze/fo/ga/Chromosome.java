@@ -2,38 +2,39 @@ package com.vynaloze.fo.ga;
 
 import com.vynaloze.fo.functions.Domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Chromosome {
-    private double geneX;
-    private double geneY;
+    private final List<Double> genes;
     private static final Random random = new Random();
 
     public Chromosome(final Domain domain) {
-        this.geneX = ThreadLocalRandom.current().nextDouble(domain.getMinX(), domain.getMaxX());  //bukinN6:
-        this.geneY = ThreadLocalRandom.current().nextDouble(domain.getMinY(), domain.getMaxY()); //fixme Best Individual: x=-0.4089798587405582 y=0.9195756692939667; f(x,y)=1.3208502897482972
+        this.genes = new ArrayList<>();
+        for (final Domain.Range range : domain.getRanges()) {
+            genes.add(ThreadLocalRandom.current().nextDouble(range.getMin(), range.getMax()));
+        }
+        //bukin6 fixme Best Individual: x=-0.4089798587405582 y=0.9195756692939667; f(x,y)=1.3208502897482972
     }
 
-    public Chromosome(final double geneX, final double geneY) {
-        this.geneX = geneX;
-        this.geneY = geneY;
+    public Chromosome(final List<Double> genes) {
+        this.genes = genes;
     }
 
-    public double getGeneX() {
-        return geneX;
+    public double getGene(final int position) {
+        return genes.get(position);
     }
 
-    public double getGeneY() {
-        return geneY;
+    public List<Double> getGenes() {
+        return genes;
     }
 
     public void mutate() {
-        if (random.nextBoolean()) {
-            geneX = randomize(geneX);
-        } else {
-            geneY = randomize(geneY);
-        }
+        final int index = random.nextInt(genes.size());
+        final double old = genes.remove(index);
+        genes.add(index, randomize(old));
     }
 
     private double randomize(final double value) {

@@ -1,9 +1,9 @@
 package com.vynaloze.fo.ga;
 
-import com.vynaloze.fo.Coord;
 import com.vynaloze.fo.Results;
 import com.vynaloze.fo.Worker;
 import com.vynaloze.fo.dao.Dao;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -75,8 +75,9 @@ public class WorkerGA extends Worker {
             out.writeObject("Best Individual: ");
             final Individual best = population.stream().max(Comparator.comparingDouble(Individual::getProbability)).get();
             out.writeObject(best.toString());
-            final Coord coord = new Coord(best.getChromosome().getGeneX(), best.getChromosome().getGeneY(), best.getFunctionValue());
-            results.add(coord);
+            //todo as param - do not store results if not visualise
+            //final Coord coord = new Coord(best.getChromosome().getGeneX(), best.getChromosome().getGeneY(), best.getFunctionValue());
+            //results.add(coord);
         }
         out.writeObject("Finished.");
         dao.putResults(results);

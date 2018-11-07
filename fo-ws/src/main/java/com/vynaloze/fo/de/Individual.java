@@ -1,9 +1,11 @@
 package com.vynaloze.fo.de;
 
 import com.vynaloze.fo.functions.Domain;
+import com.vynaloze.fo.functions.TestFunction;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.BiFunction;
 
 public class Individual {
     private final Chromosome chromosome;
@@ -31,8 +33,8 @@ public class Individual {
         return fitnessValue;
     }
 
-    public void evaluateFitness(final BiFunction<Double, Double, Double> function) {
-        functionValue = function.apply(getChromosome().getGeneX(), getChromosome().getGeneY());
+    public void evaluateFitness(final TestFunction function) {
+        functionValue = function.apply(getChromosome().getGenes());
         fitnessValue = 1.0 / functionValue;
     }
 
@@ -48,38 +50,55 @@ public class Individual {
 
     private static Individual multiplyByConstant(final Individual i, final double F) {
         final Chromosome c = i.getChromosome();
-        final Chromosome chromosome = new Chromosome(F * c.getGeneX(), F * c.getGeneY());
-        return new Individual(chromosome);
+        final List<Double> genes = new ArrayList<>();
+        for (final Double gene : c.getGenes()) {
+            genes.add(F * gene);
+        }
+        return new Individual(new Chromosome(genes));
     }
 
     private static Individual add(final Individual i1, final Individual i2) {
         final Chromosome c1 = i1.getChromosome();
         final Chromosome c2 = i2.getChromosome();
-        final Chromosome chromosome = new Chromosome(c1.getGeneX() + c2.getGeneX(), c1.getGeneY() + c2.getGeneY());
-        return new Individual(chromosome);
+        final List<Double> genes = new ArrayList<>();
+        for (int i = 0; i < c1.getGenes().size(); i++) {
+            final double c1Gene = c1.getGene(i);
+            final double c2Gene = c2.getGene(i);
+            genes.add(c1Gene + c2Gene);
+        }
+        return new Individual(new Chromosome(genes));
     }
 
     private static Individual substract(final Individual i1, final Individual i2) {
         final Chromosome c1 = i1.getChromosome();
         final Chromosome c2 = i2.getChromosome();
-        final Chromosome chromosome = new Chromosome(c1.getGeneX() - c2.getGeneX(), c1.getGeneY() - c2.getGeneY());
-        return new Individual(chromosome);
+        final List<Double> genes = new ArrayList<>();
+        for (int i = 0; i < c1.getGenes().size(); i++) {
+            final double c1Gene = c1.getGene(i);
+            final double c2Gene = c2.getGene(i);
+            genes.add(c1Gene - c2Gene);
+        }
+        return new Individual(new Chromosome(genes));
     }
 
     public static Individual crossover(final Individual target, final Individual offspring) {
-        final boolean forcePickX = random.nextBoolean();
-        final boolean forcePickY = !forcePickX;
-        double probability = random.nextDouble();
-        final double x = (probability < Params.CROSSOVER_RATE || forcePickX) ? offspring.getChromosome().getGeneX() : target.getChromosome().getGeneX();
-        probability = random.nextDouble();
-        final double y = (probability < Params.CROSSOVER_RATE || forcePickY) ? offspring.getChromosome().getGeneY() : target.getChromosome().getGeneY();
-        return new Individual(new Chromosome(x, y));
+        final int size = target.getChromosome().getGenes().size();
+        final int forcePick = random.nextInt(size);
+        final List<Double> genes = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            final double probability = random.nextDouble();
+            genes.add((probability < Params.CROSSOVER_RATE || i == forcePick) ? offspring.getChromosome().getGene(i) : target.getChromosome().getGene(i));
+        }
+        return new Individual(new Chromosome(genes));
     }
 
     @Override
     public String toString() {
-        return "x=" + chromosome.getGeneX()
-                + " y=" + chromosome.getGeneY()
-                + "; f(x,y)=" + functionValue;
+        final StringBuilder sb = new StringBuilder();
+        for (final Double gene : chromosome.getGenes()) {
+            sb.append(gene.toString()).append(", ");
+        }
+        sb.append("f(x,y)=").append(functionValue);
+        return sb.toString();
     }
 }
