@@ -1,7 +1,6 @@
 package com.vynaloze.fo.ga;
 
 import com.vynaloze.fo.functions.Domain;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -16,7 +15,6 @@ public class Chromosome {
         for (final Domain.Range range : domain.getRanges()) {
             genes.add(ThreadLocalRandom.current().nextDouble(range.getMin(), range.getMax()));
         }
-        //bukin6 fixme Best Individual: x=-0.4089798587405582 y=0.9195756692939667; f(x,y)=1.3208502897482972
     }
 
     public Chromosome(final List<Double> genes) {

@@ -16,7 +16,7 @@ public class SocketReader implements Runnable {
     @Override
     public void run() {
         Object input;
-        try {//fixme this flow
+        try {
             while ((input = in.readObject()) != null) {
                 if (input instanceof Response) {
                     final Response response = (Response) input;
@@ -26,13 +26,10 @@ public class SocketReader implements Runnable {
                 } else if (input instanceof String) {
                     final String line = (String) input;
                     out.println(">>>" + line);
-                    if (line.equalsIgnoreCase(Response.Status.DROP.getStatus())) {
-                        System.exit(0);
-                    }
                 }
             }
         } catch (final IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }

@@ -1,28 +1,26 @@
 package com.vynaloze.fo;
 
 import com.vynaloze.fo.functions.TestFunction;
-
 import java.io.Serializable;
 
 public class Response implements Serializable {
-    //fixme rethink this class
     private final Status status;
     private final Results results;
     private final TestFunction testFunction;
     private final boolean visualize;
 
+    public Response(final Status status) {
+        this.status = status;
+        this.results = null;
+        this.testFunction = null;
+        this.visualize = false;
+    }
+
     public Response(final Status status, final Results results, final TestFunction testFunction) {
         this.status = status;
         this.results = results;
         this.testFunction = testFunction;
-        this.visualize = false;
-    }
-
-    public Response(final Status status, final Results results, final TestFunction testFunction, final boolean visualize) {
-        this.status = status;
-        this.results = results;
-        this.testFunction = testFunction;
-        this.visualize = visualize;
+        this.visualize = true;
     }
 
     public Status getStatus() {

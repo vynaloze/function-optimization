@@ -2,7 +2,6 @@ package com.vynaloze.fo.de;
 
 import com.vynaloze.fo.functions.Domain;
 import com.vynaloze.fo.functions.TestFunction;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -98,7 +97,7 @@ public class Individual {
         for (final Double gene : chromosome.getGenes()) {
             sb.append(gene.toString()).append(", ");
         }
-        sb.append("f(x,y)=").append(functionValue);
+        sb.append("f(...)=").append(functionValue);
         return sb.toString();
     }
 }

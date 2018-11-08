@@ -1,7 +1,6 @@
 package com.vynaloze.fo.net;
 
 import com.vynaloze.fo.Response;
-import com.vynaloze.fo.Results;
 import com.vynaloze.fo.Worker;
 import com.vynaloze.fo.dao.Dao;
 import com.vynaloze.fo.de.WorkerDE;
@@ -10,11 +9,9 @@ import com.vynaloze.fo.functions.BukinN6Function;
 import com.vynaloze.fo.functions.RosenbrockFunction;
 import com.vynaloze.fo.functions.TestFunction;
 import com.vynaloze.fo.ga.WorkerGA;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-//fixme all of this to look up
 public class Controller {
     private final Dao dao;
 
@@ -27,13 +24,13 @@ public class Controller {
             final String[] splitted = request.toUpperCase().split(";");
 
             if (splitted[0].equalsIgnoreCase(Response.Status.DROP.getStatus())) {
-                return new Response(Response.Status.DROP, null, null);
+                return new Response(Response.Status.DROP);
             }
 
             if (splitted.length < 2 || splitted.length > 3) {
                 out.writeObject("Invalid request size. Possible options: [ GA/DE ];[ ROS/BEA/BUK ](;VIS)");
 
-                return new Response(Response.Status.INVALID, null, null);
+                return new Response(Response.Status.INVALID);
             }
 
             final Worker worker;
@@ -47,7 +44,7 @@ public class Controller {
                 default:
                     out.writeObject("Invalid algorithm. Possible options: GA, DE.");
 
-                    return new Response(Response.Status.INVALID, null, null);
+                    return new Response(Response.Status.INVALID);
             }
             final TestFunction testFunction;
             switch (splitted[1]) {
@@ -63,26 +60,22 @@ public class Controller {
                 default:
                     out.writeObject("Invalid function. Possible options: ROS,BEA,BUK.");
 
-                    return new Response(Response.Status.INVALID, null, null);
+                    return new Response(Response.Status.INVALID);
             }
 
             worker.setTestFunction(testFunction);
             worker.run(out);
 
-
             final boolean visualise = splitted.length == 3;
-
-            final Results results; //fixme this is kinda stupid
             if (visualise) {
-                results = dao.getResults(testFunction.getClass(), splitted[0]).get();
+                return new Response(Response.Status.OK, dao.getResults(testFunction.getClass(), splitted[0]), testFunction);
             } else {
-                results = null;
+                return new Response(Response.Status.OK);
             }
-            return new Response(Response.Status.OK, results, testFunction, visualise);
 
         } catch (final IOException e) {
             e.printStackTrace();
-            return new Response(Response.Status.INVALID, null, null);
+            return new Response(Response.Status.INVALID);
         }
     }
 }

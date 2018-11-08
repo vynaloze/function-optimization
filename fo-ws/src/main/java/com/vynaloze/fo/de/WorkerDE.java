@@ -1,9 +1,9 @@
 package com.vynaloze.fo.de;
 
+import com.vynaloze.fo.Coord;
 import com.vynaloze.fo.Results;
 import com.vynaloze.fo.Worker;
 import com.vynaloze.fo.dao.Dao;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -33,7 +33,6 @@ public class WorkerDE extends Worker {
 
             out.writeObject("Iteration " + iteration + "/" + Params.ITERATIONS);
 
-
             for (int target = 0; target < population.size(); target++) {
 //                out.writeObject("a) Take 3 distinct parents.");
                 final List<Individual> candidates = getThreeDistinctParents(target);
@@ -60,9 +59,8 @@ public class WorkerDE extends Worker {
             out.writeObject("Best Individual: ");
             final Individual best = population.stream().max(Comparator.comparingDouble(Individual::getFitnessValue)).get();
             out.writeObject(best.toString());
-            //todo as param - do not store results if not visualise
-//            final Coord coord = new Coord(best.getChromosome().getGeneX(), best.getChromosome().getGeneY(), best.getFunctionValue());
-//            results.add(coord);
+            final Coord coord = new Coord(best.getChromosome().getGene(0), best.getChromosome().getGene(1), best.getFunctionValue());
+            results.add(coord);
         }
         out.writeObject("Finished.");
         dao.putResults(results);

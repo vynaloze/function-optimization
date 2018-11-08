@@ -25,6 +25,9 @@ public class Client {
             String input;
             while ((input = stdIn.readLine()) != null) {
                 socketOut.println(input);
+                if (input.equalsIgnoreCase(Response.Status.DROP.getStatus())) {
+                    System.exit(0);
+                }
             }
 
         } catch (IOException e) {
