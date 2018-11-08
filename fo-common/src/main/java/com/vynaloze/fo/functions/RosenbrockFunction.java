@@ -2,6 +2,7 @@ package com.vynaloze.fo.functions;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class RosenbrockFunction extends TestFunction {
     public RosenbrockFunction() {
         super(new Domain(new Domain.Range(-100, 100), new Domain.Range(-100, 100)));

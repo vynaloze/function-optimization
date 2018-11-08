@@ -2,6 +2,7 @@ package com.vynaloze.fo.functions;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class BukinN6Function extends TestFunction {
     public BukinN6Function() {
         super(new Domain(new Domain.Range(-15, -5), new Domain.Range(-3, 3)));

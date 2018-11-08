@@ -2,6 +2,7 @@ package com.vynaloze.fo.functions;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class BealeFunction extends TestFunction {
     public BealeFunction() {
         super(new Domain(new Domain.Range(-4.5, 4.5), new Domain.Range(-4.5, 4.5)));
